@@ -1,0 +1,43 @@
+name: Setup actions
+description: mono npm projects workflow, includes test and release.
+author: DavidJones
+
+inputs:
+  node_version:
+    description: 'node version'
+    required: true
+    default: '19'
+  token:
+    description: 'git auth token'
+    required: false
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    # checkout 代码
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        token: ${{ inputs.token }}
+    # 设置 Git 用户
+    - name: Git config
+      shell: bash
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+    # 安装 Node
+    - name: Setup nodejs
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node_version }}
+    # 缓存依赖
+    - name: Restore cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: '**/node_modules/*'
+        key: ${{ runner.os }} Node@${{ inputs.node_version }} ${{ hashFiles('./yarn.lock') }}
+    # 安装依赖
+    - name: Install dependencies
+      shell: bash
+      run: yarn install

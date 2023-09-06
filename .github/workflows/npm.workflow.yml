@@ -1,0 +1,73 @@
+# NPM 工作流
+name: Npm
+
+on: [workflow_call]
+
+env:
+  # 默认分支
+  CI_DEFAULT_BRANCH: main
+  # 产物文件名称
+  CI_COVERAGE_ARTIFACT_FILE: coverage-${{ github.sha }}
+
+jobs:
+  # 测试任务
+  test:
+    name: Test#node-${{ matrix.node_version }}#${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: ['19']
+        os: [macOS-latest]
+    steps:
+      # 初始化
+      - name: Initialize project
+        uses: series-one/one-workflow/.github/actions/setup-composite@main
+        with:
+          node_version: ${{ matrix.node_version }}
+          token: ${{ secrets.CI_GIT_TOKEN }}
+      # 测试/覆盖率
+      - name: Run tests and collect coverage
+        uses: series-one/one-workflow/.github/actions/coverage-composite@main
+        if: ${{ matrix.node_version == '19' && github.ref == 'refs/heads/main' }}
+        with:
+          artifact_name: $CI_COVERAGE_ARTIFACT_FILE
+  # 发布任务
+  deploy:
+    name: Deploy
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [Test]
+    runs-on: macOS-latest
+    steps:
+      # 初始化
+      - name: Initialize project
+        uses: series-one/one-workflow/.github/actions/setup-composite@main
+        with:
+          token: ${{ secrets.CI_GIT_TOKEN }}
+      # 登录 npm
+      - name: Npm login
+        uses: series-one/one-workflow/.github/actions/npm-login-composite@main
+        with:
+          token: ${{ secrets.CI_NPM_AUTH_TOKEN }}
+      # 发布
+      - name: Npm release
+        uses: series-one/one-workflow/.github/actions/npm-deploy-composite@main
+        with:
+          default_branch: $CI_DEFAULT_BRANCH
+  # 发布 Github Pages
+  pages:
+    name: Page
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [Deploy]
+    runs-on: macOS-latest
+    steps:
+      # 初始化
+      - name: Initialize project
+        uses: series-one/one-workflow/.github/actions/setup-composite@main
+        with:
+          token: ${{ secrets.CI_GIT_TOKEN }}
+      # 发布 github apge
+      - name: Deploy github page
+        uses: series-one/one-workflow/.github/actions/pages-composite@main
+        with:
+          artifact_name: $CI_COVERAGE_ARTIFACT_FILE
+          token: ${{ secrets.CI_GIT_TOKEN }}

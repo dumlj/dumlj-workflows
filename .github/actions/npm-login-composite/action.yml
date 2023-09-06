@@ -1,0 +1,26 @@
+name: Npm login actions
+description: login npm.
+author: DavidJones
+
+inputs:
+  token:
+    description: 'npm user auth token'
+    required: false
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    # 登录 npm
+    - name: Npm Login
+      shell: bash
+      run: |
+        if [[ -n "${{ inputs.username }}" ]]; then echo "//registry.npmjs.org/:username=github-actions[bot]" >> $HOME/.npmrc; fi
+        if [[ -n "${{ inputs.email }}" ]]; then echo "//registry.npmjs.org/:email=github-actions[bot]@users.noreply.github.com" >> $HOME/.npmrc; fi
+        if [[ -n "${{ inputs.token }}" ]]; then echo "//registry.npmjs.org/:_authToken=${{ inputs.token }}" >> $HOME/.npmrc; fi
+        echo "//registry.npmjs.org/:always-auth=false" >> $HOME/.npmrc
+        echo "registry=https://registry.npmjs.org/" >> $HOME/.npmrc
+        echo "home=https://www.npmjs.org" >> $HOME/.npmrc
+        npm whoami &> /dev/null && echo "login successfully, user is $(npm whoami)." || echo "login failed."
+        echo "npm config:"
+        cat $HOME/.npmrc
