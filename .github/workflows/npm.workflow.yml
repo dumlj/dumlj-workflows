@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         node_version: ['19']
-        os: [macOS-latest, ubuntu-latest]
+        os: [macOS-latest, ubuntu-latest, windows-latest]
     steps:
       # 初始化
       - name: Initialize project
@@ -28,7 +28,7 @@ jobs:
       # 测试/覆盖率
       - name: Run tests and collect coverage
         uses: dumlj/dumlj-workflows/.github/actions/coverage-composite@main
-        if: ${{ matrix.node_version == '19' }}
+        if: ${{ matrix.node_version == '19' && matrix.os == 'macOS-latest' }}
         with:
           artifact_name: $CI_COVERAGE_ARTIFACT_FILE
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
@@ -57,8 +57,8 @@ jobs:
   # 发布 Github Pages
   gh-page:
     name: Deploy pages
-    if: ${{ github.ref == 'refs/heads/main' }}
     needs: [release]
+    if: always() && (needs.release.result == 'success' || needs.release.result == 'success')
     runs-on: macOS-latest
     steps:
       # 初始化
