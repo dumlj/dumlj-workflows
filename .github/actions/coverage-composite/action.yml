@@ -16,8 +16,10 @@ runs:
       shell: bash
       run: yarn ci:coverage
     # 上传覆盖率
-    - name: Upload coverage to codecov
+    - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     # 上传覆盖率产物
     - name: Upload coverage artifacts
       # 只有主分支才会触发，所以无需所有都上传
