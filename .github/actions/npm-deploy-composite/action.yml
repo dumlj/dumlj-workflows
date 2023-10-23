@@ -1,5 +1,5 @@
-name: Npm deploy actions
-description: Deploy.
+name: Npm release actions
+description: Release project to npm.
 author: DavidJones
 
 inputs:
@@ -16,7 +16,7 @@ runs:
       shell: bash
       run: yarn ci:build
     # 部署
-    - name: Deploy
+    - name: Release to npm
       shell: bash
       run: |
         # 删除远程不存在的分支

@@ -58,7 +58,7 @@ jobs:
   gh-page:
     name: gh-page
     if: ${{ github.ref == 'refs/heads/main' }}
-    needs: [Deploy]
+    needs: [release]
     runs-on: macOS-latest
     steps:
       # 初始化
@@ -67,7 +67,7 @@ jobs:
         with:
           token: ${{ secrets.CI_GIT_TOKEN }}
       # 发布 github apge
-      - name: Deploy github page
+      - name: Deploy to github page
         uses: dumlj/dumlj-workflows/.github/actions/pages-composite@main
         with:
           artifact_name: $CI_COVERAGE_ARTIFACT_FILE
