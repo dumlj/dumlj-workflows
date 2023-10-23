@@ -16,6 +16,9 @@ runs:
   steps:
     # 测试
     - name: Run tests and collect coverage
+      env:
+        # @see https://github.com/actions/runner-images/issues/70
+        NODE_OPTIONS: '--max_old_space_size=4096'
       shell: bash
       run: yarn ci:coverage
     # 上传覆盖率
@@ -23,8 +26,6 @@ runs:
       uses: codecov/codecov-action@v3
       env:
         CODECOV_TOKEN: ${{ inputs.codecov_token }}
-        # @see https://github.com/actions/runner-images/issues/70
-        NODE_OPTIONS: '--max_old_space_size=4096'
 
     # 上传覆盖率产物
     - name: Upload coverage artifacts
