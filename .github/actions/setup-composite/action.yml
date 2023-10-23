@@ -4,11 +4,11 @@ author: DavidJones
 
 inputs:
   node_version:
-    description: 'node version'
+    description: 'Node Version'
     required: true
     default: '19'
-  token:
-    description: 'git auth token'
+  git_access_token:
+    description: 'Git Access Token'
     required: false
     default: ''
 
@@ -19,7 +19,7 @@ runs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        token: ${{ inputs.token }}
+        token: ${{ inputs.git_access_token }}
     # 设置 Git 用户
     - name: Git config
       shell: bash

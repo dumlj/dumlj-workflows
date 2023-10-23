@@ -3,12 +3,14 @@ description: deploy github page.
 author: DavidJones
 
 inputs:
+  # Git access token，Github 生成
   token:
-    description: 'git auth token'
+    description: 'Git Access Token'
     required: true
-  # 不传则下载而是掉多一次测试
+  # 不传则下载而是调多一次测试，有就下没有就不下
+  # execute one more time coverage if empty
   artifact_name:
-    description: 'the file name of artifacts'
+    description: 'The file name of artifacts'
     required: false
     default: ''
 

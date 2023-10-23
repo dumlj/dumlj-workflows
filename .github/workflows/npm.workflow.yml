@@ -24,14 +24,14 @@ jobs:
         uses: dumlj/dumlj-workflows/.github/actions/setup-composite@main
         with:
           node_version: ${{ matrix.node_version }}
-          token: ${{ secrets.CI_GIT_TOKEN }}
+          git_access_token: ${{ secrets.CI_GIT_TOKEN }}
       # 测试/覆盖率
       - name: Run tests and collect coverage
         uses: dumlj/dumlj-workflows/.github/actions/coverage-composite@main
-        if: ${{ matrix.node_version == '19' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           artifact_name: $CI_COVERAGE_ARTIFACT_FILE
-          token: ${{ secrets.CODECOV_TOKEN }}
+          codecov_token: ${{ secrets.CODECOV_TOKEN }}
   # 发布任务
   deploy:
     name: Deploy
