@@ -3,9 +3,11 @@ description: deploy github page.
 author: DavidJones
 
 inputs:
-  # Git access token
   git_access_token:
     description: 'Git Access Token'
+    required: true
+  codecov_token:
+    description: 'Codecov Token'
     required: true
   # 不传则下载而是调多一次测试，有就下没有就不下
   # execute one more time coverage if empty
@@ -29,6 +31,8 @@ runs:
     - name: Run tests and collect coverage
       if: ${{ inputs.artifact_name == '' }}
       uses: dumlj/dumlj-workflows/.github/actions/coverage-composite@main
+      with:
+        codecov_token: ${{ inputs.codecov_token }}
     # 生成 gh-pages
     - name: Build github page source
       shell: bash
