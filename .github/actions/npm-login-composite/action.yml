@@ -12,7 +12,7 @@ runs:
   using: "composite"
   steps:
     # 登录 npm
-    - name: Npm Login
+    - name: Login NPM
       shell: bash
       run: |
         if [[ -n "${{ inputs.username }}" ]]; then echo "//registry.npmjs.org/:username=github-actions[bot]" >> $HOME/.npmrc; fi

@@ -27,7 +27,7 @@ runs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
     # 安装 Node
-    - name: Setup nodejs
+    - name: Setup NodeJS
       uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node_version }}

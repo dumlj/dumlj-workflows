@@ -26,7 +26,6 @@ runs:
       uses: codecov/codecov-action@v3
       env:
         CODECOV_TOKEN: ${{ inputs.codecov_token }}
-
     # 上传覆盖率产物
     - name: Upload coverage artifacts
       # 只有主分支才会触发，所以无需所有都上传

@@ -18,7 +18,7 @@ runs:
   using: "composite"
   steps:
     # 下载覆盖率文件
-    - name: download artifacts
+    - name: Download artifacts
       if: ${{ inputs.artifact_name != '' }}
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -30,11 +30,11 @@ runs:
       if: ${{ inputs.artifact_name == '' }}
       uses: dumlj/dumlj-workflows/.github/actions/coverage-composite@main
     # 生成 gh-pages
-    - name: build pages
+    - name: Build github page source
       shell: bash
       run: yarn ci:pages
     # 发布 gh-pages
-    - name: release to github pages
+    - name: Release to github page
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ inputs.token }}

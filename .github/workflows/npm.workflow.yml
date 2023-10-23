@@ -1,4 +1,4 @@
-# NPM 工作流
+# monorepo for npm
 name: Npm
 
 on: [workflow_call]
@@ -34,35 +34,35 @@ jobs:
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
   # 发布任务
   release:
-    name: release
+    name: Release projects
     if: ${{ github.ref == 'refs/heads/main' }}
-    needs: [Test]
+    needs: [test]
     runs-on: macOS-latest
     steps:
       # 初始化
-      - name: Initialize project
+      - name: Initialize projects
         uses: dumlj/dumlj-workflows/.github/actions/setup-composite@main
         with:
           token: ${{ secrets.CI_GIT_TOKEN }}
       # 登录 npm
-      - name: Npm login
+      - name: Login NPM
         uses: dumlj/dumlj-workflows/.github/actions/npm-login-composite@main
         with:
           token: ${{ secrets.CI_NPM_AUTH_TOKEN }}
       # 发布
-      - name: Npm release
+      - name: Release to NPM
         uses: dumlj/dumlj-workflows/.github/actions/npm-deploy-composite@main
         with:
           default_branch: $CI_DEFAULT_BRANCH
   # 发布 Github Pages
   gh-page:
-    name: gh-page
+    name: Deploy pages
     if: ${{ github.ref == 'refs/heads/main' }}
     needs: [release]
     runs-on: macOS-latest
     steps:
       # 初始化
-      - name: Initialize project
+      - name: Initialize projects
         uses: dumlj/dumlj-workflows/.github/actions/setup-composite@main
         with:
           token: ${{ secrets.CI_GIT_TOKEN }}
