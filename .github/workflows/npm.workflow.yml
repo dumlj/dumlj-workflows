@@ -28,7 +28,7 @@ jobs:
       # 测试/覆盖率
       - name: Run tests and collect coverage
         uses: dumlj/dumlj-workflows/.github/actions/coverage-composite@main
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ matrix.node_version == '19' }}
         with:
           artifact_name: $CI_COVERAGE_ARTIFACT_FILE
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
