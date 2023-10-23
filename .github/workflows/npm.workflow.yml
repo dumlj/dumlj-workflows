@@ -65,10 +65,10 @@ jobs:
       - name: Initialize projects
         uses: dumlj/dumlj-workflows/.github/actions/setup-composite@main
         with:
-          token: ${{ secrets.CI_GIT_TOKEN }}
+          git_access_token: ${{ secrets.CI_GIT_TOKEN }}
       # 发布 github apge
       - name: Deploy to github page
         uses: dumlj/dumlj-workflows/.github/actions/pages-composite@main
         with:
           artifact_name: $CI_COVERAGE_ARTIFACT_FILE
-          token: ${{ secrets.CI_GIT_TOKEN }}
+          git_access_token: ${{ secrets.CI_GIT_TOKEN }}
