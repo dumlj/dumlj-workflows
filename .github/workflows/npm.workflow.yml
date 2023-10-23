@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         node_version: ['19']
-        os: [macOS-latest]
+        os: [macOS-latest, ubuntu-latest, windows-latest]
     steps:
       # 初始化
       - name: Initialize project
