@@ -37,7 +37,7 @@ jobs:
     name: Release projects
     if: ${{ github.ref == 'refs/heads/main' }}
     needs: [test]
-    runs-on: macOS-latest
+    runs-on: matrix.os
     steps:
       # 初始化
       - name: Initialize projects
