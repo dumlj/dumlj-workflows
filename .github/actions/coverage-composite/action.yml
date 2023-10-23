@@ -23,6 +23,9 @@ runs:
       uses: codecov/codecov-action@v3
       env:
         CODECOV_TOKEN: ${{ inputs.codecov_token }}
+        # @see https://github.com/actions/runner-images/issues/70
+        NODE_OPTIONS: '--max_old_space_size=4096'
+
     # 上传覆盖率产物
     - name: Upload coverage artifacts
       # 只有主分支才会触发，所以无需所有都上传
