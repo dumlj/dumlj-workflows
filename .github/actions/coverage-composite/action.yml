@@ -3,8 +3,11 @@ description: mono npm projects workflow, includes test and release.
 author: DavidJones
 
 inputs:
+  token:
+    description: 'Codecov Token'
+    required: true
   artifact_name:
-    description: 'the file name of artifacts'
+    description: 'The file name of artifacts'
     required: false
     default: ''
 
@@ -19,7 +22,7 @@ runs:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        CODECOV_TOKEN: ${{ inputs.token }}
     # 上传覆盖率产物
     - name: Upload coverage artifacts
       # 只有主分支才会触发，所以无需所有都上传
