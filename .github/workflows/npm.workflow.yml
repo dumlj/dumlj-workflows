@@ -58,7 +58,7 @@ jobs:
   gh-page:
     name: Deploy pages
     needs: [release]
-    if: always() && (needs.release.result == 'success' || needs.release.result == 'success')
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: macOS-latest
     steps:
       # 初始化
