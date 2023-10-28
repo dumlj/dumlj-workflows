@@ -17,7 +17,9 @@ runs:
     # 测试
     - name: Run tests and collect coverage
       shell: bash
-      run: yarn ci:coverage
+      run:
+        - yarn
+        - yarn ci:coverage
       env:
         # @see https://github.com/actions/runner-images/issues/70
         NODE_OPTIONS: '--max_old_space_size=4096'
