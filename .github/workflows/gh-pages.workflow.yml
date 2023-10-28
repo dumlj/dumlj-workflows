@@ -8,8 +8,8 @@ env:
 
 jobs:
   # 发布 Github Pages
-  pages:
-    name: Page
+  gh-pages:
+    name: gh-pages
     runs-on: macOS-latest
     steps:
       # 初始化
