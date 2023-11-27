@@ -43,7 +43,7 @@ jobs:
       - name: Initialize projects
         uses: dumlj/dumlj-workflows/.github/actions/setup-composite@main
         with:
-          token: ${{ secrets.CI_GIT_TOKEN }}
+          git_access_token: ${{ secrets.CI_GIT_TOKEN }}
       # 登录 npm
       - name: Login NPM
         uses: dumlj/dumlj-workflows/.github/actions/npm-login-composite@main
