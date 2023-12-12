@@ -20,6 +20,12 @@ runs:
       uses: actions/checkout@v3
       with:
         token: ${{ inputs.git_access_token }}
+    # 安装 Pnpm
+    - name: Setup Pnpm
+      uses: pnpm/action-setup@v2
+      if: ${{ hashFiles('./pnpm-lock.yaml') != '' }}
+      with:
+        version: 8
     # 设置 Git 用户
     - name: Git config
       shell: bash
@@ -36,8 +42,13 @@ runs:
       uses: actions/cache@v3
       with:
         path: '**/node_modules/*'
-        key: ${{ runner.os }} Node@${{ inputs.node_version }} ${{ hashFiles('./yarn.lock') }}
+        key: ${{ runner.os }} Node@${{ inputs.node_version }} ${{ hashFiles('./yarn.lock') }} ${{ hashFiles('./pnpm-lock.yaml') }}
     # 安装依赖
-    - name: Install dependencies
+    - name: Pnpm install dependencies
       shell: bash
-      run: $(node -e "var e=require('./package.json').packageManager||'yarn';console.log(e.match(/(?:p?npm|yarn)/).shift())") install
+      if: ${{ hashFiles('./pnpm-lock.yaml') != '' }}
+      run: pnpm install
+    - name: Yarn install dependencies
+      shell: bash
+      if: ${{ hashFiles('./yarn.lock') != '' }}
+      run: yarn install
