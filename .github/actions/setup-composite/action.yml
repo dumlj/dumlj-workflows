@@ -40,4 +40,4 @@ runs:
     # 安装依赖
     - name: Install dependencies
       shell: bash
-      run: yarn install
+      run: $(node -e "var e=require('./package.json').packageManager||'yarn';console.log(e.match(/(?:p?npm|yarn)/).shift())") install
