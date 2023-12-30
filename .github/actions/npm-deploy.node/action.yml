@@ -17,7 +17,6 @@ runs:
       run: npm run ci:build
     # 部署
     - name: Release to NPM
-      shell: bash
       run: |
         # 删除远程不存在的分支
         git remote prune origin > /dev/null 2>&1
