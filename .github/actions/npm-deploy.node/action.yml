@@ -55,4 +55,3 @@ runs:
           # 避免冲突必须带上 preid 参数用时间戳区分版本
           npx lerna publish --canary $ver_type --exact --preid "alpha.$(date +%s)" --dist-tag alpha --force-publish --yes
         fi
-n
