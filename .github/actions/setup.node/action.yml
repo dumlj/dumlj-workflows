@@ -16,28 +16,28 @@ runs:
   using: "composite"
   steps:
     # checkout 代码
-    - name: Checkout repository
+    - name: Checkout project
       uses: actions/checkout@v3
       with:
         token: ${{ inputs.git_access_token }}
     # 设置 Git 用户
-    - name: Git config
+    - name: Configure git authority
       shell: bash
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
     # 安装 Node
-    - name: Setup NodeJS
+    - name: Install NodeJS
       uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node_version }}
     # 缓存依赖
-    - name: Restore cache dependencies
+    - name: Cache dependencies
       uses: actions/cache@v3
       with:
         path: '**/node_modules/*'
-        key: ${{ runner.os }} Node@${{ inputs.node_version }} ${{ hashFiles('./yarn.lock') }}
+        key: ${{ runner.os }} Node@${{ inputs.node_version }} ${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
     # 安装依赖
     - name: Install dependencies
       shell: bash
-      run: yarn install
+      run: npx swpm install

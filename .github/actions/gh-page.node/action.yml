@@ -30,15 +30,15 @@ runs:
     # 生成覆盖率
     - name: Run tests and collect coverage
       if: ${{ inputs.artifact_name == '' }}
-      uses: dumlj/dumlj-workflows/.github/actions/coverage-composite@main
+      uses: dumlj/dumlj-workflows/.github/actions/coverage.node@main
       with:
         codecov_token: ${{ inputs.codecov_token }}
     # 生成 gh-pages
-    - name: Build github page source
+    - name: Build gh-pages
       shell: bash
-      run: yarn ci:pages
+      run: npm run ci:pages
     # 发布 gh-pages
-    - name: Release to github page
+    - name: Release
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ inputs.git_access_token }}

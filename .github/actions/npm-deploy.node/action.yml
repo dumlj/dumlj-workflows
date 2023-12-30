@@ -6,7 +6,7 @@ inputs:
   default_branch:
     description: 'specify default branch'
     required: false
-    default: 'main'    
+    default: 'main'
 
 runs:
   using: "composite"
@@ -14,7 +14,7 @@ runs:
     # 编译代码
     - name: Compile codes and build
       shell: bash
-      run: yarn ci:build
+      run: npm run ci:build
     # 部署
     - name: Release to NPM
       shell: bash
@@ -46,12 +46,13 @@ runs:
 
           # 修改版本号，这里会带提交，请确保登录 Git 并拥有修改权限
           commit_message="chore(release): [skip ci] release"
-          yarn lerna version $ver_type --message "$commit_message" --yes
+          npx lerna version $ver_type --message "$commit_message" --yes
 
           # 根据上一条命令更新的版本号发布新版到 npm
-          yarn lerna publish from-package --yes
+          npx lerna publish from-package --yes
         else
           # 预发，版本号带哈希
           # 避免冲突必须带上 preid 参数用时间戳区分版本
-          yarn lerna publish --canary $ver_type --exact --preid "alpha.$(date +%s)" --dist-tag alpha --force-publish --yes
+          npx lerna publish --canary $ver_type --exact --preid "alpha.$(date +%s)" --dist-tag alpha --force-publish --yes
         fi
+n

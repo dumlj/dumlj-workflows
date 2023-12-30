@@ -1,4 +1,3 @@
-# monorepo for npm
 name: Npm
 
 on: [workflow_call]
@@ -21,13 +20,13 @@ jobs:
     steps:
       # 初始化
       - name: Initialize project
-        uses: dumlj/dumlj-workflows/.github/actions/setup-composite@main
+        uses: dumlj/dumlj-workflows/.github/actions/setup.node@main
         with:
           node_version: ${{ matrix.node_version }}
           git_access_token: ${{ secrets.CI_GIT_TOKEN }}
       # 测试/覆盖率
       - name: Run tests and collect coverage
-        uses: dumlj/dumlj-workflows/.github/actions/coverage-composite@main
+        uses: dumlj/dumlj-workflows/.github/actions/coverage.node@main
         if: ${{ matrix.node_version == '20' }}
         with:
           artifact_name: $CI_COVERAGE_ARTIFACT_FILE
@@ -41,17 +40,17 @@ jobs:
     steps:
       # 初始化
       - name: Initialize projects
-        uses: dumlj/dumlj-workflows/.github/actions/setup-composite@main
+        uses: dumlj/dumlj-workflows/.github/actions/setup.node@main
         with:
           git_access_token: ${{ secrets.CI_GIT_TOKEN }}
       # 登录 npm
       - name: Login NPM
-        uses: dumlj/dumlj-workflows/.github/actions/npm-login-composite@main
+        uses: dumlj/dumlj-workflows/.github/actions/npm-login.node@main
         with:
           token: ${{ secrets.CI_NPM_AUTH_TOKEN }}
       # 发布
       - name: Release to NPM
-        uses: dumlj/dumlj-workflows/.github/actions/npm-deploy-composite@main
+        uses: dumlj/dumlj-workflows/.github/actions/npm-deploy.node@main
         with:
           default_branch: $CI_DEFAULT_BRANCH
   # 发布 Github Pages
@@ -63,12 +62,12 @@ jobs:
     steps:
       # 初始化
       - name: Initialize projects
-        uses: dumlj/dumlj-workflows/.github/actions/setup-composite@main
+        uses: dumlj/dumlj-workflows/.github/actions/setup.node@main
         with:
           git_access_token: ${{ secrets.CI_GIT_TOKEN }}
       # 发布 github apge
       - name: Deploy to github page
-        uses: dumlj/dumlj-workflows/.github/actions/gh-pages-composite@main
+        uses: dumlj/dumlj-workflows/.github/actions/gh-page.node@main
         with:
           artifact_name: $CI_COVERAGE_ARTIFACT_FILE
           git_access_token: ${{ secrets.CI_GIT_TOKEN }}
