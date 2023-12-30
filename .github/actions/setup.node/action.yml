@@ -22,6 +22,7 @@ runs:
         token: ${{ inputs.git_access_token }}
     # 设置 Git 用户
     - name: Configure git authority
+      shell: bash
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
