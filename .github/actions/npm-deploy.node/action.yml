@@ -17,8 +17,6 @@ runs:
       run: npm run ci:build
     # 部署
     - name: Release to NPM
-      env:
-        GH_TOKEN: ${{ secrets.CI_GIT_TOKEN }}
       shell: bash
       run: |
         # 删除远程不存在的分支
@@ -57,3 +55,5 @@ runs:
           # 避免冲突必须带上 preid 参数用时间戳区分版本
           npx lerna publish --canary $ver_type --exact --preid "alpha.$(date +%s)" --dist-tag alpha --force-publish --yes
         fi
+      env:
+        GH_TOKEN: ${{ secrets.CI_GIT_TOKEN }}
