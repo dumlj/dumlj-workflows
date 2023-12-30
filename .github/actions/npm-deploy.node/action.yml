@@ -17,6 +17,8 @@ runs:
       run: npm run ci:build
     # 部署
     - name: Release to NPM
+      env:
+        GH_TOKEN: ${{ secrets.CI_GIT_TOKEN }}
       shell: bash
       run: |
         # 删除远程不存在的分支
