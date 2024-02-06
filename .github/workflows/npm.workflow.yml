@@ -34,7 +34,7 @@ jobs:
   # 发布任务
   release:
     name: release
-    if: ${{ github.ref_type == 'branch' && (github.ref_name == 'main' || github.ref_name == 'alpha' | github.ref_name == 'beta') }}
+    if: ${{ github.ref_type == 'branch' && (github.ref_name == 'main' || github.ref_name == 'alpha' || github.ref_name == 'beta') }}
     needs: [test]
     runs-on: macOS-latest
     steps:
