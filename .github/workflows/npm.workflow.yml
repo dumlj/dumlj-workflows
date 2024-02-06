@@ -15,17 +15,17 @@ jobs:
     outputs:
       os_list: ${{ steps.set-os.outputs.os_list }}
     steps:
-      - name: Set variable `os_list`
+      - name: Set variable "os_list"
         run: |
           if [[ "${{ github.ref_name }}" == "main" ]]; then
             echo "::set-output name=os_list::[\"macOS-latest\", \"ubuntu-latest\", \"windows-latest\"]"
           else
             echo "::set-output name=os_list::[\"macOS-latest\"]"
           fi
-      - name: Set variable `should_release`
+      - name: Set variable "should_release"
         run: |
           if [[ "${{ github.ref_name }}" =~ '^(main|alpha|beta)$' ]]; then
-            echo "::set-output should_release=1
+            echo "::set-output name=should_release::=1"
           fi
   # 测试任务
   test:
