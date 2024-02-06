@@ -65,7 +65,9 @@ runs:
             tag="beta"
           fi
 
-          # 版本号带哈希
-          # 避免冲突必须带上 preid 参数用时间戳区分版本
-          npx lerna publish --canary $ver_type --exact --preid "$tag.$(date +%s)" --dist-tag $tag --force-publish --yes
+          if [[ -n "$tag" ]]; then
+            # 版本号带哈希
+            # 避免冲突必须带上 preid 参数用时间戳区分版本
+            npx lerna publish --canary $ver_type --exact --preid "$tag.$(date +%s)" --dist-tag $tag --force-publish --yes
+          fi
         fi
