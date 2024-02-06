@@ -38,11 +38,19 @@ runs:
       with:
         version: 8
         run_install: false
+    - name: Get package manager store directory
+      shell: bash
+      run: |
+        if [[ ${{ hashFiles('**/pnpm-lock.yaml') != '' }} ]]; then
+          echo "STORE_PATH=**/node_modules/*" >> $GITHUB_ENV
+        else
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        fi
     # 缓存依赖
     - name: Cache dependencies
       uses: actions/cache@v3
       with:
-        path: '**/node_modules/*'
+        path: ${{ env.STORE_PATH }}
         key: ${{ runner.os }} Node@${{ inputs.node_version }} ${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
     # 安装依赖
     - name: Install dependencies
