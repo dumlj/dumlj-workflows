@@ -23,14 +23,14 @@ jobs:
         run: |
           # 只有主分支需要验证所有平台
           if [[ "${{ github.ref_name }}" == "main" ]]; then
-            echo "os_list='[\"macOS-latest\", \"ubuntu-latest\", \"windows-latest\"]'" >> $GITHUB_OUTPUT
+            echo "os_list=[\"macOS-latest\", \"ubuntu-latest\", \"windows-latest\"]" >> $GITHUB_OUTPUT
           else
-            echo "os_list='[\"macOS-latest\"]'" >> $GITHUB_OUTPUT
+            echo "os_list=[\"macOS-latest\"]" >> $GITHUB_OUTPUT
           fi
 
           # 根据分支确认是否需要发布
           if [[ "${{ github.ref_name }}" =~ '^(main|alpha|beta)$' ]]; then
-            echo "::set-output name=should_release::=1"
+            echo "should_release=1" >> $GITHUB_OUTPUT
           fi
   # 测试任务
   test:
