@@ -32,21 +32,22 @@ runs:
         # 同步远程Git状态
         git fetch --prune > /dev/null 2>&1
 
-        # 获取最后的引用, Tag 或者为主分支
-        latest_ref=$([[ -n "$(git tag -l)" ]] && git describe --tags --abbrev=0 || echo "origin/${{ inputs.default_branch }}")
         # 提交的分支
         commit_branch=$(echo "${{ github.ref }}" | sed "s/refs\/heads\///")
-        # 获取提交信息
-        conventional_commits="$(git log "$latest_ref"..."origin/$commit_branch" --pretty=format:"%s" || echo "")"
-        # 这里通过 conventional-commits 规范判断是否存在"功能"提交
-        has_feat="$(echo -e "$conventional_commits" | grep -E "^(feat|perf):" && echo "1" || echo "0")"
-        # 版本类型
-        # 所有非"功能"更新均视为"补丁"
-        ver_type="$([[ "$has_feat" == "1" ]] && echo "minor" || echo "patch")"
 
         # 发布生产
         # 需要先登录 Git
         if [[ "$commit_branch" == "${{ inputs.default_branch }}" ]]; then
+          # 获取最后的引用, Tag 或者为主分支
+          latest_ref=$([[ -n "$(git tag -l)" ]] && git describe --tags --abbrev=0 || echo "origin/${{ inputs.default_branch }}")
+          # 获取提交信息
+          conventional_commits="$(git log "$latest_ref"..."origin/$commit_branch" --pretty=format:"%s" || echo "")"
+          # 这里通过 conventional-commits 规范判断是否存在"功能"提交
+          has_feat="$(echo -e "$conventional_commits" | grep -E "^(feat|perf):" && echo "1" || echo "0")"
+          # 版本类型
+          # 所有非"功能"更新均视为"补丁"
+          ver_type="$([[ "$has_feat" == "1" ]] && echo "minor" || echo "patch")"
+
           # 切分支，当前 HEAD 正常来说应该等于默认分支，否则应该自动取消
           # 请保证 `interruptible: true` 在正式发布任务重声明
           git checkout ${{ inputs.default_branch }}
@@ -65,7 +66,10 @@ runs:
             tag="beta"
           fi
 
-          # 版本号带哈希
-          # 避免冲突必须带上 preid 参数用时间戳区分版本
-          npx lerna publish --dist-tag $tag --exact --preid "$tag.$(date +%s)" --force-publish --yes
+          if [[ -n "$tag" ]]; then
+            # 设置版本号
+            npx lerna version $tag --preid=$tag.$(git rev-parse --short HEAD) --no-git-tag-version --no-push --no-commit
+            # 发布
+            npx lerna --dist-tag $tag
+          fi
         fi

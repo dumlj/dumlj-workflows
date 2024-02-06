@@ -1,4 +1,4 @@
-name: Npm
+name: npm.workflow
 
 on: [workflow_call]
 
@@ -57,7 +57,7 @@ jobs:
   gh-page:
     name: gh-page
     needs: [release]
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref_type == 'branch' && github.ref_name == 'main' }}
     runs-on: macOS-latest
     steps:
       # 初始化
