@@ -34,7 +34,7 @@ jobs:
   # 发布任务
   release:
     name: release
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref =~ '^refs/heads/(main|alpha|beta)$' }}
     needs: [test]
     runs-on: macOS-latest
     steps:
@@ -65,8 +65,8 @@ jobs:
         uses: dumlj/dumlj-workflows/.github/actions/setup.node@main
         with:
           git_access_token: ${{ secrets.CI_GIT_TOKEN }}
-      # 发布 github apge
-      - name: Deploy to github page
+      # 发布
+      - name: Deploy to github
         uses: dumlj/dumlj-workflows/.github/actions/gh-page.node@main
         with:
           artifact_name: $CI_COVERAGE_ARTIFACT_FILE

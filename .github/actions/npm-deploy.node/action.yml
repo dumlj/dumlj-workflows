@@ -7,6 +7,14 @@ inputs:
     description: 'specify default branch'
     required: false
     default: 'main'
+  alpha_branch:
+    description: 'specify branch to publish alpha version'
+    required: false
+    default: 'alpha'
+  beta_branch:
+    description: 'specify branch to publish beta version'
+    required: false
+    default: 'beta'
 
 runs:
   using: "composite"
@@ -36,10 +44,9 @@ runs:
         # 所有非"功能"更新均视为"补丁"
         ver_type="$([[ "$has_feat" == "1" ]] && echo "minor" || echo "patch")"
 
-        # 发布
-        # 正式环境需要先登录 Git
+        # 发布生产
+        # 需要先登录 Git
         if [[ "$commit_branch" == "${{ inputs.default_branch }}" ]]; then
-          # 正式
           # 切分支，当前 HEAD 正常来说应该等于默认分支，否则应该自动取消
           # 请保证 `interruptible: true` 在正式发布任务重声明
           git checkout ${{ inputs.default_branch }}
@@ -51,7 +58,14 @@ runs:
           # 根据上一条命令更新的版本号发布新版到 npm
           npx lerna publish from-package --yes
         else
-          # 预发，版本号带哈希
+          # 根据分支名确定标签
+          if [[ "$commit_branch" == "${{ inputs.alpha_branch }}" ]]; then
+            tag="alpha"
+          elif [[ "$commit_branch" == "${{ inputs.beta_branch }}" ]]; then
+            tag="beta"
+          fi
+
+          # 版本号带哈希
           # 避免冲突必须带上 preid 参数用时间戳区分版本
-          npx lerna publish --canary $ver_type --exact --preid "alpha.$(date +%s)" --dist-tag alpha --force-publish --yes
+          npx lerna publish --dist-tag $tag --exact --preid "$tag.$(date +%s)" --force-publish --yes
         fi

@@ -15,12 +15,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # checkout 代码
+    # 拉取代码
     - name: Checkout project
       uses: actions/checkout@v3
       with:
         token: ${{ inputs.git_access_token }}
-    # 设置 Git 用户
+    # 配置 Git
     - name: Configure git authority
       shell: bash
       run: |
@@ -31,7 +31,7 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node_version }}
-    # 安装 pnpm
+    # 安装 Pnpm
     - name: Install Pnpm
       uses: pnpm/action-setup@v2
       if: ${{ hashFiles('**/pnpm-lock.yaml') != '' }}

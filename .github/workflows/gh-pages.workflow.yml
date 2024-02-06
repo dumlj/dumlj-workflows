@@ -18,7 +18,7 @@ jobs:
         with:
           node_version: '20'
           git_access_token: ${{ secrets.CI_GIT_TOKEN }}
-      # 发布 github apge
+      # 发布
       - name: Deploy to github page
         uses: dumlj/dumlj-workflows/.github/actions/gh-page.node@main
         with:
