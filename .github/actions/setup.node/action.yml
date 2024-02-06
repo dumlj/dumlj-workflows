@@ -15,6 +15,15 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Detect package manager
+      shell: bash
+      run: |
+        if [[ ${{ hashFiles('**/pnpm-lock.yaml') != '' }} ]]; then
+          echo "PNPM=1" >> $GITHUB_ENV
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        else
+          echo "STORE_PATH=**/node_modules/*" >> $GITHUB_ENV
+        fi
     # 拉取代码
     - name: Checkout project
       uses: actions/checkout@v3
@@ -34,18 +43,10 @@ runs:
     # 安装 Pnpm
     - name: Install Pnpm
       uses: pnpm/action-setup@v2
-      if: ${{ hashFiles('**/pnpm-lock.yaml') != '' }}
+      if: ${{ env.PNPM }}
       with:
         version: 8
         run_install: false
-    - name: Get package manager store directory
-      shell: bash
-      run: |
-        if [[ ${{ hashFiles('**/pnpm-lock.yaml') != '' }} ]]; then
-          echo "STORE_PATH=**/node_modules/*" >> $GITHUB_ENV
-        else
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-        fi
     # 缓存依赖
     - name: Cache dependencies
       uses: actions/cache@v3
