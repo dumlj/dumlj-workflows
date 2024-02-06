@@ -13,17 +13,22 @@ jobs:
   pre:
     runs-on: ubuntu-latest
     outputs:
-      os_list: ${{ steps.set-os.outputs.os_list }}
+      # OS 列表
+      os_list: ${{ steps.set-variables.outputs.os_list }}
+      # 是否需要发布
+      should_release: ${{ steps.set-variables.outputs.should_release }}
     steps:
-      - name: Set variable "os_list"
+      - name: Set variables
+        id: set-variables
         run: |
+          # 只有主分支需要验证所有平台
           if [[ "${{ github.ref_name }}" == "main" ]]; then
-            echo "::set-output name=os_list::[\"macOS-latest\", \"ubuntu-latest\", \"windows-latest\"]"
+            echo "os_list='[\"macOS-latest\", \"ubuntu-latest\", \"windows-latest\"]'" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=os_list::[\"macOS-latest\"]"
+            echo "os_list='[\"macOS-latest\"]'" >> $GITHUB_OUTPUT
           fi
-      - name: Set variable "should_release"
-        run: |
+
+          # 根据分支确认是否需要发布
           if [[ "${{ github.ref_name }}" =~ '^(main|alpha|beta)$' ]]; then
             echo "::set-output name=should_release::=1"
           fi
