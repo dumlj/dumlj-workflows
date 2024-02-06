@@ -35,7 +35,7 @@ jobs:
     strategy:
       matrix:
         node_version: ['20']
-        os: ${{ fromJson(needs.branch.outputs.os_list) }}
+        os: ${{ fromJson(needs.pre.outputs.os_list) }}
     steps:
       # 初始化
       - name: Initialize project
@@ -53,8 +53,8 @@ jobs:
   # 发布任务
   release:
     name: release
-    if: ${{ needs.branch.outputs.should_release }}
-    needs: [test]
+    if: ${{ needs.pre.outputs.should_release }}
+    needs: [pre, test]
     runs-on: ubuntu-latest
     steps:
       # 初始化
