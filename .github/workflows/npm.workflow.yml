@@ -58,7 +58,7 @@ jobs:
   # 发布任务
   release:
     name: release
-    if: ${{ needs.pre.outputs.should_release }}
+    if: ${{ needs.pre.outputs.should_release == '1' }}
     needs: [pre, test]
     runs-on: ubuntu-latest
     steps:
