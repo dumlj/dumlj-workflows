@@ -26,14 +26,3 @@ runs:
       uses: codecov/codecov-action@v3
       env:
         CODECOV_TOKEN: ${{ inputs.codecov_token }}
-    # 上传覆盖率产物
-    - name: Upload coverage artifacts
-      # 只有主分支才会触发，所以无需所有都上传
-      # 针对 workflow/gh-pages.yml 的 os 与 node_version
-      if: ${{ inputs.artifact_name != '' }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ inputs.artifact_name }}
-        path: |
-          ./coverage
-          ./junit.xml

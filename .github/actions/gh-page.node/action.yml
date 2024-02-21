@@ -19,20 +19,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # 下载覆盖率文件
-    - name: Download artifacts
-      if: ${{ inputs.artifact_name != '' }}
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        workflow: ${{ github.event.workflow_run.workflow_id }}
-        workflow_conclusion: success
-        name: ${{ inputs.artifact_name }}
-    # 生成覆盖率
-    - name: Run tests and collect coverage
-      if: ${{ inputs.artifact_name == '' }}
-      uses: dumlj/dumlj-workflows/.github/actions/coverage.node@main
-      with:
-        codecov_token: ${{ inputs.codecov_token }}
     # 生成 gh-pages
     - name: Build gh-pages
       shell: bash
