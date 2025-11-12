@@ -36,9 +36,7 @@ runs:
         echo "✅ gh-pages directory is ready"
     # 发布 gh-pages
     - name: Release
-      uses: peaceiris/actions-gh-pages@v3
-      env:
-        GITHUB_TOKEN: ${{ inputs.git_access_token != '' && inputs.git_access_token || github.token }}
+      uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ inputs.git_access_token != '' && inputs.git_access_token || github.token }}
         publish_dir: ./gh-pages
