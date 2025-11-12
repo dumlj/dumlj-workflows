@@ -5,7 +5,8 @@ author: DavidJones
 inputs:
   git_access_token:
     description: 'Git Access Token'
-    required: true
+    required: false
+    default: ''
   codecov_token:
     description: 'Codecov Token'
     required: true
@@ -27,5 +28,5 @@ runs:
     - name: Release
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ inputs.git_access_token }}
+        github_token: ${{ inputs.git_access_token != '' && inputs.git_access_token || github.token }}
         publish_dir: ./gh-pages
