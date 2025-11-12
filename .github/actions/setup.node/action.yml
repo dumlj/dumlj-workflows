@@ -38,20 +38,27 @@ runs:
       with:
         version: 10
         run_install: false
+    # 获取 store 目录并设置缓存路径
     - name: Get store directory
+      id: pnpm-cache
       shell: bash
       run: |
-        if [[ ${{ hashFiles('**/pnpm-lock.yaml') != '' }} ]]; then
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        if command -v pnpm >/dev/null 2>&1 && (test -f "pnpm-lock.yaml" || find . -name "pnpm-lock.yaml" -type f | head -1 | grep -q .); then
+          STORE_PATH=$(pnpm store path --silent)
+          echo "STORE_PATH=$STORE_PATH" >> $GITHUB_ENV
+          echo "path=$STORE_PATH" >> $GITHUB_OUTPUT
         else
-          echo "STORE_PATH=**/node_modules/*" >> $GITHUB_ENV
+          echo "STORE_PATH=node_modules" >> $GITHUB_ENV
+          echo "path=node_modules" >> $GITHUB_OUTPUT
         fi
     # 缓存依赖
     - name: Cache dependencies
       uses: actions/cache@v4
       with:
-        path: ${{ env.STORE_PATH }}
+        path: ${{ steps.pnpm-cache.outputs.path }}
         key: ${{ runner.os }}-node-${{ inputs.node_version }}-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-node-${{ inputs.node_version }}-
     # 安装依赖
     - name: Install dependencies
       shell: bash
