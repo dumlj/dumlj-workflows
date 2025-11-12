@@ -1,5 +1,7 @@
 name: Github pages actions
+
 description: deploy github page.
+
 author: DavidJones
 
 inputs:
@@ -10,8 +12,6 @@ inputs:
   codecov_token:
     description: 'Codecov Token'
     required: true
-  # 不传则下载而是调多一次测试，有就下没有就不下
-  # execute one more time coverage if empty
   artifact_name:
     description: 'The file name of artifacts'
     required: false
@@ -24,9 +24,21 @@ runs:
     - name: Build gh-pages
       shell: bash
       run: npm run ci:pages
+    # 验证 gh-pages 目录是否存在且有内容
+    - name: Verify gh-pages directory
+      shell: bash
+      run: |
+        if [ ! -d "./gh-pages" ] || [ -z "$(ls -A ./gh-pages)" ]; then
+          echo "Error: gh-pages directory is empty or does not exist"
+          ls -la ./gh-pages || echo "Directory does not exist"
+          exit 1
+        fi
+        echo "✅ gh-pages directory is ready"
     # 发布 gh-pages
     - name: Release
       uses: peaceiris/actions-gh-pages@v3
+      env:
+        GITHUB_TOKEN: ${{ inputs.git_access_token != '' && inputs.git_access_token || github.token }}
       with:
         github_token: ${{ inputs.git_access_token != '' && inputs.git_access_token || github.token }}
         publish_dir: ./gh-pages
