@@ -1,5 +1,5 @@
-name: Setup actions
-description: mono npm projects workflow, includes test and release.
+name: Setup Node.js
+description: Mono npm projects workflow, includes test and release.
 author: DavidJones
 
 inputs:
@@ -31,13 +31,12 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node_version }}
-    # 安装 Pnpm
-    - name: Install Pnpm
-      uses: pnpm/action-setup@v4
-      if: ${{ hashFiles('**/pnpm-lock.yaml') != '' }}
-      with:
-        version: 10
-        run_install: false
+    # 启用 Corepack 并准备 pnpm (Node.js 20+ 内置支持)
+    - name: Setup pnpm via Corepack
+      shell: bash
+      run: |
+        corepack enable
+        corepack prepare pnpm@10 --activate
     # 获取 store 目录并设置缓存路径
     - name: Get store directory
       id: pnpm-cache
