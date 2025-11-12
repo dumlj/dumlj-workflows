@@ -17,9 +17,9 @@ runs:
   steps:
     # 拉取代码
     - name: Checkout project
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
-        token: ${{ inputs.git_access_token }}
+        token: ${{ inputs.git_access_token != '' && inputs.git_access_token || github.token }}
     # 配置 Git
     - name: Configure git authority
       shell: bash
@@ -28,15 +28,15 @@ runs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
     # 安装 Node
     - name: Install NodeJS
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node_version }}
     # 安装 Pnpm
     - name: Install Pnpm
-      uses: pnpm/action-setup@v2
+      uses: pnpm/action-setup@v4
       if: ${{ hashFiles('**/pnpm-lock.yaml') != '' }}
       with:
-        version: 8
+        version: 10
         run_install: false
     - name: Get store directory
       shell: bash
@@ -48,10 +48,10 @@ runs:
         fi
     # 缓存依赖
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ env.STORE_PATH }}
-        key: ${{ runner.os }} Node@${{ inputs.node_version }} ${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
+        key: ${{ runner.os }}-node-${{ inputs.node_version }}-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
     # 安装依赖
     - name: Install dependencies
       shell: bash
